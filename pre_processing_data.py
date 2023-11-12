@@ -80,7 +80,7 @@ def clean_data(df):
         else:
             return 'aqi'
     df['Dominent pollutant'] = df.apply(dominant_pollutant, axis=1)
-    df.drop(['Date', 'Time', 'Month'], axis=1, inplace=True)
+    df.drop(['Date', 'Time'], axis=1, inplace=True)
 
     def myfunc(x):
         if x <= 50:
@@ -105,12 +105,14 @@ def transform_data(df, df_column_dtype):
     df = df[df['SO2']<df['SO2'].quantile(0.9)]
     return df
 
-def main():
-    df = pd.read_csv("historical_air_quality_2021_en.csv")
+def main(df_input):
+    df = pd.read_csv(df_input)
     df_summarized = summarization_data(df)
     df_cleaned, df_column_dtype = clean_data(df_summarized)
     latest_df = transform_data(df_cleaned, df_column_dtype)
-    latest_df.to_csv("pre-process-data-ok.csv",index=False)
-    return
+    latest_df.to_csv("data\\result\\pre-process-data.csv")
+    print("========================Describe========================")
+    print(latest_df.describe())
 
-main()
+if __name__ == "__main__":
+    main("data\\input\\historical_air_quality_2021_en.csv")
