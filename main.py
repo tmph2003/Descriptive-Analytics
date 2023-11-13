@@ -1,6 +1,5 @@
 import pre_processing_data as pref
 import build_chart as bch
-import pandas as pd
 
 def main():
     pref.main("data\\input\\historical_air_quality_2021_en.csv")
