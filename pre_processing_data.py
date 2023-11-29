@@ -9,7 +9,7 @@ def summarization_data(df):
     median.name = 'median'
     description = description._append(mode)._append(median)
     print(description)
-
+    description.to_csv("data\\result\\DATA_SUMMARIZATION_0.csv")
     print("====================Tỷ lệ thiếu data====================")
     data_na = (df.isnull().sum() / len(df)) * 100
     missing_data = pd.DataFrame({"Tỷ lệ thiếu data(%)" : data_na})
@@ -113,6 +113,6 @@ def main(df_input):
     latest_df.to_csv("data\\result\\pre-process-data.csv")
     print("========================Describe========================")
     print(latest_df.describe())
-
+    latest_df.describe().to_csv("data\\result\\DATA_SUMMARIZATION_0.csv")
 if __name__ == "__main__":
     main("data\\input\\historical_air_quality_2021_en.csv")
