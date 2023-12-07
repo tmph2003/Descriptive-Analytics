@@ -9,6 +9,7 @@ def pol_ind_by_month(df, df_column_dtype):
     fig = px.line(title=f'Line Plot for pollution indexes')
     for i in df_column_dtype:
         fig.add_scatter(x=df_plt1['Month'], y=df_plt1[i], mode='lines', name=f'{i}')
+        fig.update_xaxes(title='Month')
         fig.update_yaxes(title='Pollution index')
     fig.show()
 
