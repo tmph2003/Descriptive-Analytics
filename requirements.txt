@@ -1,2 +1,6 @@
 pandas
 plotly
+matplotlib
+sklearn
+plotly
+d3blocks
