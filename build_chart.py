@@ -41,17 +41,25 @@ def moving_bubbles_plot(df):
     d3.movingbubbles(df_plt4, datetime="datetime", sample_id="sample_id", state="state", filepath="./moving_point.html",
                     note="Vietnam's AQI index in 2021 for each day", cmap="hsv", center="Good", figsize=(780, 800), size=10, speed=1000000000)
 
+def heatmap_plot(df, df_column_dtype):
+    df_plt = df[df_column_dtype]
+    fig = px.imshow(df_plt.corr(), x=df_plt.columns, y=df_plt.columns, aspect='auto')
+    fig.show()
+
 def main(df_input):
     df_column_dtype = ['AQI index', 'CO', 'NO2', 'O3', 'SO2', 'Dew', 'Humidity', 'Pressure', 'PM10', 'PM2.5', 'Temperature', 'Wind']
     df = pd.read_csv(df_input)
     #Chart1
     pol_ind_by_month(df=df, df_column_dtype=df_column_dtype)
-    #Chart2
+    # #Chart2
     pol_ind_by_station(df=df, df_column_dtype=df_column_dtype)
-    #Chart3
+    # #Chart3
     pol_ind_by_month_station(df=df, df_column_dtype=df_column_dtype)
     #Chart4
+    heatmap_plot(df=df, df_column_dtype=df_column_dtype)
+    #Chart5
     moving_bubbles_plot(df=df)
+    
 
 if __name__ == "__main__":
     main("data\\result\\pre-process-data.csv")
