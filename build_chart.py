@@ -16,20 +16,48 @@ def pol_ind_by_month(df, df_column_dtype):
 def pol_ind_by_station(df, df_column_dtype):
     df_plt2 = df[df_column_dtype + ['Station ID']].groupby('Station ID').mean().reset_index()
     df_plt2['Station ID'] = df_plt2['Station ID'].astype('string')
+    
+    index_info = {
+        'AQI index': 151,
+        'CO': 10,
+        'NO2': 41,
+        'O3': 51,
+        'SO2': 21,
+        'PM10': 51,
+        'PM2.5': 26
+    }
     for i in df_column_dtype:
-        fig = px.bar(df_plt2, x='Station ID', y=f'{i}',
-                    title=f'{i}')
+        fig = px.bar(df_plt2, x='Station ID', y=f'{i}', title=f'{i}')
+        
+        if i in index_info:
+            fig.add_scatter(x=df_plt2['Station ID'], y=[index_info[i]] * len(df_plt2), mode='lines', line=dict(color="red", dash='dash'), name='Dangerous')
+        
         fig.update_xaxes(title='Station ID')
         fig.update_yaxes(title=f'{i} mean')
         fig.show()
 
 def pol_ind_by_month_station(df, df_column_dtype):
-    df_plt3 = df[df_column_dtype + ['Month'] + ['Station ID']].groupby(['Month', 'Station ID']).mean().reset_index()
+    df_plt3 = df[df_column_dtype + ['Month', 'Station ID']].groupby(['Month', 'Station ID']).mean().reset_index()
+    index_info = {
+        'AQI index': 151,
+        'CO': 10,
+        'NO2': 41,
+        'O3': 51,
+        'SO2': 21,
+        'PM10': 51,
+        'PM2.5': 26
+    }
+    
     for i in df_column_dtype:
         fig = px.line(title=f'Line Plot for {i}')  # Initialize the figure with a title
-        for j in df['Station ID'].unique():
+        
+        if i in index_info:
+            fig.add_scatter(x=df_plt3['Month'], y=[index_info[i]] * len(df_plt3), mode='lines', line=dict(color="red", dash='dash'), name='Dangerous')
+        
+        for j in df_plt3['Station ID'].unique():
             df_station = df_plt3[df_plt3['Station ID'] == j]
             fig.add_scatter(x=df_station['Month'], y=df_station[i], mode='lines', name=f'Station ID {j}')
+        
         fig.show()
 
 def moving_bubbles_plot(df):
@@ -57,9 +85,6 @@ def main(df_input):
     pol_ind_by_month_station(df=df, df_column_dtype=df_column_dtype)
     #Chart4
     heatmap_plot(df=df, df_column_dtype=df_column_dtype)
-    #Chart5
-    moving_bubbles_plot(df=df)
-    
 
 if __name__ == "__main__":
     main("data\\result\\pre-process-data.csv")
