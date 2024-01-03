@@ -49,7 +49,6 @@ def clean_data(df):
             if i not in result:
                 result.append(i)
     print(f"Những kí tự đặc biệt trong các cột có kiểu dữ liệu số: {result}")
-    df_column_dtype = ['AQI index', 'CO', 'NO2', 'O3', 'SO2', 'Dew', 'Humidity', 'Pressure', 'PM10', 'PM2.5', 'Temperature', 'Wind']
     for i in df_column_dtype:
         df[i] = df[i].replace(result, 0)
         df[i] = df[i].fillna(0)
@@ -97,9 +96,9 @@ def clean_data(df):
             return 6, "Hazardous"
     df['Alert level'], df['Status'] = zip(*df['AQI index'].apply(myfunc))
     
-    return df, df_column_dtype
+    return df
 
-def transform_data(df, df_column_dtype):
+def transform_data(df):
     print("====================Transforming data===================")
     print("====================Normalizing data====================")
     df = df[df['SO2']<df['SO2'].quantile(0.9)]
@@ -108,11 +107,12 @@ def transform_data(df, df_column_dtype):
 def main(df_input):
     df = pd.read_csv(df_input)
     df_summarized = summarization_data(df)
-    df_cleaned, df_column_dtype = clean_data(df_summarized)
-    latest_df = transform_data(df_cleaned, df_column_dtype)
+    df_cleaned = clean_data(df_summarized)
+    latest_df = transform_data(df_cleaned)
     latest_df.to_csv("data\\result\\pre-process-data.csv")
     print("========================Describe========================")
     print(latest_df.describe())
+    latest_df.describe().drop(columns=['Data Time S', 'Alert level', 'Month'], axis=1).to_csv("data\\result\\summarize_data.csv")
 
 if __name__ == "__main__":
     main("data\\input\\historical_air_quality_2021_en.csv")
